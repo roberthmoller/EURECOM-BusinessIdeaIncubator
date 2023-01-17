@@ -11,49 +11,52 @@ const logout = async () => {
 
 </script>
 <template>
-  <section>
-    <header>
-      <router-link to="/">
-        <img class="media" alt="logo" src="#"/>
-        <div class="content">
-          <h1 class="title">Business Incubator</h1>
-          <p class="subtitle">
-            Develop your ideas with other like-minded entrepreneurs
-          </p>
-        </div>
-      </router-link>
-    </header>
-    <nav>
-      <router-link to="/top-voted">Top Voted</router-link>
-      <router-link to="/most-discussed">Most Discussed</router-link>
-    </nav>
+  <nav class="container-fluid">
+    <ul id="navigation">
+      <li>
+        <router-link to="/top-voted" class="secondary">Top Voted</router-link>
+      </li>
+      <li>
+        <router-link to="/most-discussed" class="secondary">Most Discussed</router-link>
+      </li>
+    </ul>
+    <ul id="brand">
+      <li>
+        <router-link to="/">
+          <strong>Business Idea Incubator</strong>
+        </router-link>
+      </li>
+    </ul>
 
-    <section id="user" v-if="user">
-      <p>Hello {{ user.displayName }} 👋</p>
-      <button @click="logout">Logout</button>
-      <!--      <p>{{ username }}</p>-->
-      <!--      <img src="#" alt="user">-->
-    </section>
-    <section id="user" v-else>
-      <router-link to="/authenticate">Login</router-link>
-    </section>
-  </section>
+    <ul id="user">
+      <li v-if="user">
+        <p>👋{{ user.displayName }}</p>
+        <button @click="logout">Logout</button>
+      </li>
+      <li v-else>
+        <router-link class="secondary" to="/authenticate">Login</router-link>
+      </li>
+    </ul>
+  </nav>
 </template>
 
 
 <style scoped>
-/*Layout*/
-section {
+#brand a, #user li {
   display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 
-header {
+#brand a hgroup {
+  margin: 0 1rem;
   display: flex;
+  flex-direction: column;
+  align-items: start;
 }
 
-nav {
-  display: flex;
-  flex-grow: 1;
-  justify-content: space-evenly;
+#user p {
+  margin: 0 1rem;
+  /*width: 15rem;*/
 }
 </style>

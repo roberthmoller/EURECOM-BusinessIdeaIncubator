@@ -4,6 +4,7 @@ import {firebaseApp} from './firebase'
 import {router} from "./routes"
 import App from './App.vue'
 import './assets/main.css'
+import '@picocss/pico'
 
 createApp(App)
     .use(router)
