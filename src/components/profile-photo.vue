@@ -26,7 +26,7 @@ getDownloadURL(profileStorage).then(url => {
 
 <template>
   <img v-if="src" :src="src"/>
-  <p v-else>{{ props.name?.charAt(0) }}</p>
+  <p v-else>{{ props.name?.charAt(0)}}</p>
 </template>
 
 

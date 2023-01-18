@@ -5,6 +5,7 @@ import {addDoc, collection} from 'firebase/firestore'
 import {ideasRef} from "@/firebase";
 import {getStorage, ref as file, uploadBytes} from "firebase/storage";
 import {commentConverter, NewComment} from "@/models/comment";
+import {router} from "@/routes";
 
 const props = defineProps({
   ideaId: {
@@ -43,7 +44,7 @@ const addComment = async () => {
 
       const uploads = []
       for (const attachment of attachments.value) {
-         uploads.push(new Promise(resolve => {
+        uploads.push(new Promise(resolve => {
           const reader = new FileReader();
           reader.readAsArrayBuffer(attachment);
           reader.onload = async (event) => {
@@ -65,6 +66,7 @@ const addComment = async () => {
     comment.value = "";
     attachments.value = [];
     isUploading.value = false;
+    await router.push(router.currentRoute.value)
   }
 };
 </script>
@@ -80,6 +82,10 @@ const addComment = async () => {
       <button type="submit" disabled v-else aria-busy="true" class="secondary">Uploading</button>
     </form>
   </section>
+
+  <dialog :open="isUploading ? 'open': null">
+    <h1 aria-busy="true">Uploading..</h1>
+  </dialog>
 </template>
 
 <style scoped>

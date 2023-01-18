@@ -1,7 +1,7 @@
 <script setup>
 import {useRouter} from "vue-router";
 import {computed, ref} from "vue";
-import {createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile} from "firebase/auth";
+import {createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile} from "firebase/auth";
 import {auth, profilesRef} from "@/firebase";
 import {useCurrentUser} from "vuefire";
 import {getStorage, ref as bucket, uploadBytes} from "firebase/storage";
@@ -12,6 +12,7 @@ const router = useRouter();
 const storage = getStorage();
 const user = useCurrentUser()
 const photo = ref(null);
+const isUploading = ref(false);
 const registerFormName = ref("");
 const registerFormEmail = ref("");
 const registerFormPassword = ref("");
@@ -43,6 +44,7 @@ const register = async () => {
 
   const attachment = photo.value;
   if (attachment) {
+    isUploading.value = true;
     await new Promise(resolve => {
       const reader = new FileReader();
       reader.readAsArrayBuffer(attachment);
@@ -55,10 +57,15 @@ const register = async () => {
         resolve();
       }
     });
-
+    isUploading.value = false;
   }
   await setDoc(doc(profilesRef, credential.user.uid), new NewProfile(registerFormName.value, registerFormEmail.value));
   await updateProfile(credential.user, {displayName: registerFormName.value});
+  await router.push("/");
+}
+
+const logout = async () => {
+  await signOut(auth);
   await router.push("/");
 }
 const onPhotoChange = async (event) => {
@@ -104,11 +111,14 @@ const onPhotoChange = async (event) => {
 
     </section>
     <section v-else>
-      <h1 aria-busy="true"></h1>
-      <!--      <h1>Already authenticated</h1>-->
-      <!--      <button @click="logout">Logout</button>-->
+      <h1>Already authenticated</h1>
+      <button @click="logout">Logout</button>
     </section>
   </main>
+
+  <dialog :open="isUploading ? 'open': null">
+    <h1 aria-busy="true">Uploading..</h1>
+  </dialog>
 </template>
 
 

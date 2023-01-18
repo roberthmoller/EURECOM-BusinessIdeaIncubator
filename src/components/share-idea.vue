@@ -9,6 +9,7 @@ import {useCurrentUser} from "vuefire";
 
 const user = useCurrentUser()
 const storage = getStorage();
+const isUploading = ref(false);
 const title = ref("");
 const description = ref("");
 const attachments = ref([]);
@@ -31,22 +32,24 @@ const createIdea = async () => {
   }
 
   const reference = await addDoc(ideasRef, new NewIdea(title.value, description.value, user.value.uid, attachmentNames));
-  console.log("starting upload")
-  const uploads = [];
-  for (const attachment of attachments.value) {
-    uploads.push(await new Promise(resolve => {
-      const reader = new FileReader();
-      reader.readAsArrayBuffer(attachment);
-      reader.onload = async (event) => {
-        const filename = `ideas/${reference.id}/${attachment.name}`;
-        const fileRe = bucket(storage, filename);
-        await uploadBytes(fileRe, event.target.result, {contentType: attachment.type, customMetadata: {owner: user.value.uid}});
-        resolve();
-      }
-    }));
+  if (attachmentNames.length > 0) {
+    const uploads = [];
+    isUploading.value = true;
+    for (const attachment of attachments.value) {
+      uploads.push(await new Promise(resolve => {
+        const reader = new FileReader();
+        reader.readAsArrayBuffer(attachment);
+        reader.onload = async (event) => {
+          const filename = `ideas/${reference.id}/${attachment.name}`;
+          const fileRe = bucket(storage, filename);
+          await uploadBytes(fileRe, event.target.result, {contentType: attachment.type, customMetadata: {owner: user.value.uid}});
+          resolve();
+        }
+      }));
+    }
+    await Promise.all(uploads);
+    isUploading.value = false;
   }
-  await Promise.all(uploads);
-  console.log("finished upload")
 
   title.value = "";
   description.value = "";
@@ -74,6 +77,10 @@ const createIdea = async () => {
       <button type="submit" @click="createIdea" :disabled="!isFormValid">Share</button>
     </form>
   </section>
+
+  <dialog :open="isUploading ? 'open': null">
+    <h1 aria-busy="true">Uploading..</h1>
+  </dialog>
 </template>
 
 <style scoped>

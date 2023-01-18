@@ -23,7 +23,7 @@ const ideasByUser = useCollection(ideasByUserRef);
 <template>
   <section class="container" v-if="user">
     <header>
-      <ProfilePhoto :uid="user.id" :name="user.displayName" class="photo"/>
+      <ProfilePhoto :uid="user.id" :name="user.name" class="photo"/>
       <hgroup>
         <h1>@{{ user.name }}</h1>
         <p>user since
@@ -50,16 +50,24 @@ header {
 }
 
 header hgroup,
-header hgroup *{
+header hgroup * {
   margin-bottom: 0;
 }
 
 .photo {
-  text-align: center;
   margin-left: .5rem;
   height: 128px;
   width: 128px;
   border-radius: 100px;
   object-fit: cover;
+}
+
+p.photo {
+  text-align: center;
+  font-size: 42px;
+  background: var(--card-sectionning-background-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>

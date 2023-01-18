@@ -80,9 +80,11 @@ const routes = [
 
 
 <style scoped>
-summary .photo > * {
-  height: 32px;
-  width: 32px;
+summary {
+  display: flex;
+  gap: .5rem;
+  align-items: center;
+  justify-content: end;
 }
 
 summary .photo {
@@ -92,6 +94,15 @@ summary .photo {
   width: 32px;
   border-radius: 100px;
   object-fit: cover;
+}
+
+summary p.photo {
+  margin: 0;
+  text-align: center;
+  background: var(--card-sectionning-background-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 #brand {
