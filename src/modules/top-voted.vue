@@ -1,20 +1,19 @@
 <script setup>
-import {topVotedIdeasRef} from "@/firebase";
+import {top10VotedIdeasRef} from "@/firebase";
 import {useCollection} from "vuefire";
+import IdeaCard from "@/components/idea-card.vue";
 
-const ideas = useCollection(topVotedIdeasRef);
+const ideas = useCollection(top10VotedIdeasRef);
 
 </script>
 
 <template>
-  <h1>Top Voted Ideas</h1>
-  <h3 v-for="idea in ideas" :key="idea.id">
-    {{ idea.title }} - {{ idea.description }}
-    <br/>
-    👍 {{ idea.voteCount }}
-    <br/>
-    💬 {{ idea.commentCount }}
-  </h3>
+  <section class="container">
+    <h1>Top Voted</h1>
+    <main>
+      <IdeaCard v-for="idea in ideas" :idea="idea"/>
+    </main>
+  </section>
 </template>
 
 <style scoped>

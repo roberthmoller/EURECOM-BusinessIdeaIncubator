@@ -4,15 +4,19 @@ import {useRouter} from "vue-router";
 
 const user = useCurrentUser()
 const router = useRouter()
+
 const logout = async () => {
   await useFirebaseAuth().signOut();
-  await router.push("/authenticate");
+  await router.push("/");
 }
 
 </script>
 <template>
   <nav class="container-fluid">
     <ul id="navigation">
+      <li>
+        <router-link to="/all" class="secondary">All</router-link>
+      </li>
       <li>
         <router-link to="/top-voted" class="secondary">Top Voted</router-link>
       </li>
@@ -30,7 +34,7 @@ const logout = async () => {
 
     <ul id="user">
       <li v-if="user">
-        <p>👋{{ user.displayName }}</p>
+        <a :href="'/profile/' + user.uid"><!--👋-->{{ user.displayName }}</a>
         <button @click="logout">Logout</button>
       </li>
       <li v-else>
@@ -46,6 +50,11 @@ const logout = async () => {
   display: flex;
   flex-direction: row;
   align-items: center;
+  gap: 0 1rem;
+}
+
+#user li a {
+  flex-grow: 1;
 }
 
 #brand a hgroup {
@@ -56,7 +65,10 @@ const logout = async () => {
 }
 
 #user p {
-  margin: 0 1rem;
-  /*width: 15rem;*/
+  width: 15rem;
+}
+
+#user button {
+  padding: .2rem 1rem;
 }
 </style>

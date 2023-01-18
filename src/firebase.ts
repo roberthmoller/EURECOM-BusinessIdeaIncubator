@@ -1,9 +1,14 @@
 import {initializeApp} from '@firebase/app'
-// import {getAnalytics} from "firebase/analytics";
+import {getAnalytics} from "firebase/analytics";
+import {getPerformance} from "firebase/performance";
+import {getStorage} from "firebase/storage";
+
 import {collection, getFirestore, limit, orderBy, query} from '@firebase/firestore'
 import {getAuth} from '@firebase/auth'
 import type {Idea} from "@/models/idea";
 import {ideaConverter} from "@/models/idea";
+import type {Profile} from "@/models/profile";
+import {profileConverter} from "@/models/profile";
 
 export const firebaseApp = initializeApp({
     apiKey: "AIzaSyCMkl2EU6pmsO5evV0gBndboiBQwXj4htI",
@@ -19,15 +24,18 @@ export const firebaseApp = initializeApp({
 // used for the firestore refs
 export const db = getFirestore(firebaseApp)
 export const auth = getAuth(firebaseApp)
-// const analytics = getAnalytics(firebaseApp);
-
+export const analytics = getAnalytics(firebaseApp);
+export const perf = getPerformance(firebaseApp);
+export const storage = getStorage(firebaseApp);
+// const functions = getFunctions(firebaseApp);
 // here we can export reusable database references
+export let profilesRef = collection(db, 'profiles').withConverter<Profile>(profileConverter);
 export let ideasRef = collection(db, 'ideas').withConverter<Idea>(ideaConverter);
-export const topVotedIdeasRef = query(ideasRef,
+export const top10VotedIdeasRef = query(ideasRef,
     orderBy('voteCount', 'desc'),
     orderBy('createdAt', 'desc'),
     limit(10));
-export const mostDiscussedIdeasRef = query(ideasRef,
+export const tenMostDiscussedIdeasRef = query(ideasRef,
     orderBy('commentCount', 'desc'),
     orderBy('createdAt', 'desc'),
     limit(10));

@@ -17,6 +17,8 @@ const login = async () => {
 const register = async () => {
   const credential = await createUserWithEmailAndPassword(auth, email.value, password.value);
   await updateProfile(credential.user, {displayName: name.value});
+  // todo: create profile in firebase
+
   await router.push("/");
 }
 
@@ -25,36 +27,57 @@ const user = useCurrentUser()
 
 
 <template>
-  <section id="authenticate" v-if="!user">
-    <article>
+  <main class="container">
+    <section id="authenticate" v-if="!user" class="grid">
+      <article>
+        <h1>Login</h1>
+        <label for="email">Email</label>
+        <input type="email" id="email" v-model="email">
+        <label for="password">Password</label>
+        <input type="password" id="password" v-model="password">
+        <button @click="login">Login</button>
+      </article>
 
-      <h1>Register</h1>
-      <label for="name">Name</label>
-      <input type="name" id="name" v-model="name">
-      <label for="email">Email</label>
-      <input type="email" id="email" v-model="email">
-      <label for="password">Password</label>
-      <input type="password" id="password" v-model="password">
+      <article>
+        <h1>Register</h1>
+        <label for="name">Name</label>
+        <input type="name" id="name" v-model="name">
+        <label for="email">Email</label>
+        <input type="email" id="email" v-model="email">
+        <label for="password">Password</label>
+        <input type="password" id="password" v-model="password">
 
-      <button @click="register">Register</button>
-    </article>
-    <hr/>
-    <article>
-      <h1>Login</h1>
-      <label for="email">Email</label>
-      <input type="email" id="email" v-model="email">
-      <label for="password">Password</label>
-      <input type="password" id="password" v-model="password">
-      <button @click="login">Login</button>
-    </article>
-  </section>
-  <section v-else>
-    <h1>Already authenticated</h1>
-    <button @click="logout">Logout</button>
-  </section>
+        <button @click="register">Register</button>
+      </article>
+
+    </section>
+    <section v-else>
+      <h1>Already authenticated</h1>
+      <button @click="logout">Logout</button>
+    </section>
+  </main>
 </template>
 
 
 <style scoped>
 
+
+@media (min-width: 1024px) {
+  #authenticate {
+    display: flex;
+  }
+
+  #authenticate article {
+    flex-grow: 1;
+    flex-basis: 0;
+    flex-shrink: 1;
+  }
+}
+
+@media (max-width: 1024px) {
+  #authenticate {
+    display: flex;
+    flex-direction: column;
+  }
+}
 </style>
