@@ -43,24 +43,28 @@ const addComment = async () => {
 
       const uploads = []
       for (const attachment of attachments.value) {
-        const reader = new FileReader();
-        reader.readAsArrayBuffer(attachment);
-        reader.onload = async (event) => {
-          const filename = `ideas/${props.ideaId}/comments/${commentRef.id}/${attachment.name}`;
-          console.log("filename", filename);
+         uploads.push(new Promise(resolve => {
+          const reader = new FileReader();
+          reader.readAsArrayBuffer(attachment);
+          reader.onload = async (event) => {
+            const filename = `ideas/${props.ideaId}/comments/${commentRef.id}/${attachment.name}`;
+            console.log("filename", filename);
 
-          const fileRef = file(storage, filename);
-          uploads.push(uploadBytes(fileRef, event.target.result,
-              {contentType: attachment.type, customMetadata: {owner: user.value.uid}}));
-        }
+            const fileRef = file(storage, filename);
+            await uploadBytes(fileRef, event.target.result,
+                {contentType: attachment.type, customMetadata: {owner: user.value.uid}})
+
+            resolve();
+          }
+        }));
         await Promise.all(uploads);
       }
     } catch (e) {
       console.error(e);
     }
-      comment.value = "";
-      attachments.value = [];
-      isUploading.value = false;
+    comment.value = "";
+    attachments.value = [];
+    isUploading.value = false;
   }
 };
 </script>

@@ -10,11 +10,11 @@ const topVotedIdeas = useCollection(top10VotedIdeasRef);
   <section id="top-voted">
     <hgroup>
       <h1>Top Voted 👍</h1>
-      <p>See what others are voting for
-        <span>- <router-link to="/top-voted">see more</router-link></span>
-      </p>
+      <router-link to="/top-voted">
+        See all what others are voting for
+      </router-link>
     </hgroup>
-    <IdeaCard v-for="(idea, index) in topVotedIdeas" :idea="idea" :is-top="index === 0"/>
+    <IdeaCard v-for="(idea, index) in topVotedIdeas" :idea="idea" :index="index"/>
   </section>
 </template>
 

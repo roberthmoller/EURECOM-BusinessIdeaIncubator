@@ -1,6 +1,6 @@
 <script setup>
 import {SavedIdea} from "@/models/idea";
-import {defineProps} from "vue";
+import {computed, defineProps} from "vue";
 import {useRouter} from "vue-router";
 import {useCurrentUser, useDocument} from "vuefire";
 import {doc, setDoc} from 'firebase/firestore'
@@ -14,17 +14,20 @@ const props = defineProps({
     type: SavedIdea,
     required: true
   },
-  isTop: {
-    type: Boolean,
-    default: false
+  index: {
+    type: Number,
+    default: -1
   }
 });
 const router = useRouter();
 const user = useCurrentUser();
+const isAuthenticated = computed(() => user.value !== null);
 
 const voteRef = user.value ? doc(ideasRef, props.idea.id, "votes", user.value.uid)
     .withConverter(voteConverter) : null;
 const vote = user.value ? useDocument(voteRef) : null;
+
+const podium = ['🥇', '🥈', '🥉']
 const upvoteIdea = async v => {
   if (user) {
     const newVote = new NewVote(!v?.upvote ?? true, user.value.uid);
@@ -41,23 +44,26 @@ const goToIdea = () => {
 <template>
   <article :key="idea.id" @click="goToIdea">
     <hgroup>
+        <h2>{{ idea.title }} {{0 <= props.index < podium.length ? podium[props.index] : "" }}</h2>
       <div class="context">
-        <h2>{{ idea.title }} {{ props.isTop ? "🔥" : "" }}</h2>
-        <div class="actions">
-          <a href="#" role="button" :data-tooltip="vote?.upvote ? 'remove vote': 'upvote'"
-             @click.stop="upvoteIdea(vote)" :class="user && vote?.upvote ? 'secondary' :'primary'"
-             :disabled="!user"
-          >
-            {{ idea.voteCount }} 👍
+        <p>
+          <a :href="'/profile/' + idea.author">
+            <ProfileName :uid="idea.author"/>
           </a>
+        </p>
+
+        <div class="actions">
+          <span :class="user && vote?.upvote ? 'secondary' :'primary'"
+             :data-tooltip="vote?.upvote ? 'remove vote': 'upvote'"
+             href="#" :role="isAuthenticated ?'button':''"
+             @click.stop="upvoteIdea(vote)">
+            <span>{{ idea.voteCount }}</span>
+            <span>👍</span>
+          </span>
           <a href="#" role="button" data-tooltip="comment" @click="goToIdea">{{ idea.commentCount }} 💬</a>
         </div>
       </div>
-      <p>
-        <a :href="'/profile/' + idea.author">
-          <ProfileName :uid="idea.author"/>
-        </a>
-      </p>
+
     </hgroup>
   </article>
 </template>
@@ -67,6 +73,14 @@ article:hover {
   cursor: pointer;
 }
 
+.actions > * {
+  text-decoration: none;
+  border-bottom: none !important;
+
+  display: flex;
+  flex-direction: row;
+  gap: .5rem;
+}
 
 article {
   padding: 1rem 2rem;
@@ -100,6 +114,7 @@ hgroup {
   padding: 0;
 }
 
+/*.context .actions > span,*/
 .context [role="button"] {
   padding: 4px 10px;
 }

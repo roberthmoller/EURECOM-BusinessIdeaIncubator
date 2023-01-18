@@ -38,8 +38,8 @@ a {
   display: flex;
   flex-direction: row;
   align-items: center;
-  background: var(--accordion-border-color);
-  padding: .5rem .7rem;
+  /*background: var(--accordion-border-color);*/
+  /*padding: .5rem .7rem;*/
   border-radius: 3px;
   width: fit-content;
   text-decoration: none;

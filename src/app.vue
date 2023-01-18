@@ -13,9 +13,4 @@ body {
   margin: 0;
   padding: 0;
 }
-
-/*Desktop?*/
-@media (min-width: 1024px) {
-
-}
 </style>

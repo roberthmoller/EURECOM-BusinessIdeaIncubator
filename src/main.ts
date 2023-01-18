@@ -7,6 +7,11 @@ import {date} from "@/directives/date";
 import App from './app.vue'
 import './assets/main.css'
 import '@picocss/pico'
+import {library} from '@fortawesome/fontawesome-svg-core'
+import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
+import {faBars} from '@fortawesome/free-solid-svg-icons'
+
+library.add(faBars)
 
 createApp(App)
     .use(router)

@@ -3,6 +3,7 @@ import {useCurrentUser} from "vuefire";
 import TopVotedSection from "@/components/top-voted-section.vue";
 import MostDiscussedSection from "@/components/most-discussed-section.vue";
 import ShareIdea from "@/components/share-idea.vue";
+import TopContrbuters from "@/components/top-contrbuters.vue";
 
 const user = useCurrentUser()
 
@@ -13,8 +14,9 @@ const user = useCurrentUser()
       <TopVotedSection/>
       <MostDiscussedSection/>
     </main>
-    <aside v-if="user">
+    <aside v-if="user" class="container">
       <ShareIdea/>
+<!--      <TopContrbuters/>-->
     </aside>
   </div>
 </template>
@@ -28,7 +30,7 @@ const user = useCurrentUser()
   }
 
   aside {
-    min-width: 30vw;
+    max-width: 30vw;
     margin-left: 1rem;
   }
 }
@@ -39,6 +41,4 @@ const user = useCurrentUser()
     flex-direction: column;
   }
 }
-
-
 </style>

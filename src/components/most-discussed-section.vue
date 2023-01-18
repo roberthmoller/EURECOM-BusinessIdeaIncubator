@@ -11,11 +11,11 @@ const mostDiscussedIdeas = useCollection(tenMostDiscussedIdeasRef);
   <section id="most-discussed">
     <hgroup>
       <h1>Most Discussed 💬</h1>
-      <p>The hottest discussions right now
-        <span>- <router-link to="/most-discussed">see more</router-link></span>
-      </p>
+      <router-link to="/most-discussed">
+        See all the hottest discussions right now
+      </router-link>
     </hgroup>
-    <IdeaCard v-for="(idea, index) in mostDiscussedIdeas" :idea="idea" :is-top="index === 0"/>
+    <IdeaCard v-for="(idea, index) in mostDiscussedIdeas" :idea="idea" :index="index"/>
   </section>
 </template>
 

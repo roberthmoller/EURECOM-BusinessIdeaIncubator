@@ -113,6 +113,9 @@ const deleteIdea = () => {
   gap: 1rem;
 }
 
+#attachments section {
+  margin-bottom: 0;
+}
 #title #context p {
   margin: 0;
 }

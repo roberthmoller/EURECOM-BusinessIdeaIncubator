@@ -4,6 +4,7 @@ import {ideasRef, profilesRef} from "@/firebase";
 import {useCollection, useDocument} from "vuefire";
 import {doc, limit, orderBy, query, where} from "firebase/firestore";
 import IdeaCard from "@/components/idea-card.vue";
+import ProfilePhoto from "@/components/profile-photo.vue";
 
 const ideas = useCollection(ideasRef);
 
@@ -20,16 +21,17 @@ const user = useDocument(profileRef);
 const ideasByUser = useCollection(ideasByUserRef);
 </script>
 <template>
-  <section class="container">
+  <section class="container" v-if="user">
     <header>
+      <ProfilePhoto :uid="user.id" :name="user.displayName" class="photo"/>
       <hgroup>
         <h1>@{{ user.name }}</h1>
         <p>user since
-          <time v-date v-if="user">{{ user.createdAt }}</time>
+          <time v-date>{{ user.createdAt }}</time>
         </p>
       </hgroup>
     </header>
-    <main>
+    <main v-if="ideasByUser.length > 0">
       <hgroup>
         <h3>Ideas</h3>
         <p>by {{ user.name }}</p>
@@ -40,5 +42,24 @@ const ideasByUser = useCollection(ideasByUserRef);
 </template>
 
 <style scoped>
+header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
 
+header hgroup,
+header hgroup *{
+  margin-bottom: 0;
+}
+
+.photo {
+  text-align: center;
+  margin-left: .5rem;
+  height: 128px;
+  width: 128px;
+  border-radius: 100px;
+  object-fit: cover;
+}
 </style>
