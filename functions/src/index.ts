@@ -36,7 +36,6 @@ export const onCommentCreate = commentCollection.onCreate(
         }
     });
 
-
 export const onCommentDelete = commentCollection.onDelete(
     async (change, context) => {
         try {
@@ -98,14 +97,13 @@ export const onVoteChange = voteCollection.onUpdate(
 
                 const upvote = change.after.data().upvote;
                 transaction.update(ideaRef, {
-                    voteCount: idea.data().voteCount + upvote ? 1 : -1,
+                    voteCount: idea.data().voteCount + (upvote ? 1 : -1),
                 });
             });
         } catch (e) {
             console.error(e);
         }
     });
-
 
 export const onVoteDelete = voteCollection.onDelete(
     async (change, context) => {

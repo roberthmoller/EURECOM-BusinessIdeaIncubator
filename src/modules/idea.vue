@@ -60,16 +60,17 @@ const deleteIdea = () => {
                   :data-tooltip="vote?.upvote ? 'remove vote': 'upvote'"
                   href="#"
                   role="button"
-                  :disabled="isOffline"
+                  :disabled="isOffline ? true : null"
                   @click="upvoteIdea(!vote?.upvote ?? true)">👍</a>
               <!-- Todo: Enable editing -->
               <a v-if="idea.author === user?.uid"
                  data-tooltip="edit" href="#" role="button"
-                 :disabled="true"
+                 :disabled="isOffline ? true : null"
                  @click="editIdea">📝</a>
+              <!-- Todo: Enable delete-->
               <a v-if="idea.author === user?.uid"
                  data-tooltip="delete" href="#" role="button"
-                 :disabled="isOffline"
+                 :disabled="isOffline ? true : null"
                  @click="deleteIdea">🗑️</a>
             </div>
           </div>

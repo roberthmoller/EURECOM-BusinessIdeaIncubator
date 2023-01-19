@@ -3,7 +3,7 @@ import {SavedIdea} from "@/models/idea";
 import {computed} from "vue";
 import {useRouter} from "vue-router";
 import {useCurrentUser, useDocument} from "vuefire";
-import {doc, setDoc} from 'firebase/firestore'
+import {deleteDoc, doc, setDoc} from 'firebase/firestore'
 import {NewVote, voteConverter} from "@/models/vote";
 import {ideasRef} from "@/firebase";
 import ProfileName from "@/components/profile-name.vue";
@@ -31,8 +31,12 @@ const vote = user.value ? useDocument(voteRef) : null;
 const podium = ['🥇', '🥈', '🥉']
 const upvoteIdea = async v => {
   if (user) {
-    const newVote = new NewVote(!v?.upvote ?? true, user.value.uid);
-    await setDoc(voteRef, newVote);
+    if (v) {
+      await deleteDoc(voteRef);
+    } else {
+      const newVote = new NewVote(true, user.value.uid);
+      await setDoc(voteRef, newVote);
+    }
   }
 }
 
@@ -54,19 +58,22 @@ const goToIdea = () => {
         </p>
 
         <div class="actions">
-          <span :class="user && vote?.upvote ? 'secondary' :'primary'"
+          <span v-if="isOnline"
+                :class="user && vote?.upvote ? 'secondary' :'primary'"
                 :data-tooltip="isOnline
                   ? vote?.upvote ? 'remove vote': 'upvote'
                   : 'connect to upvote'"
                 href="#" :role="isAuthenticated ?'button':''"
-                :disabled="isOffline"
+                :disabled="isOffline ? true : null"
                 @click.stop="upvoteIdea(vote)">
             <span>{{ idea.voteCount }}</span>
             <span>👍</span>
           </span>
+
+
           <a href="#" role="button"
              data-tooltip="comment"
-             :disabled="isOffline"
+             :disabled="isOffline ? true : null"
              @click="goToIdea">
             <span>{{ idea.commentCount }}</span>
             <span>💬</span>

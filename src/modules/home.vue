@@ -37,7 +37,8 @@ const user = useCurrentUser()
 @media (max-width: 1024px) {
   .layout {
     display: flex;
-    flex-direction: column;
+    flex-direction: column-reverse;
+
   }
 }
 </style>

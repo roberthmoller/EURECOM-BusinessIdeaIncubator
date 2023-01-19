@@ -11,6 +11,7 @@ export const forceOffline = false;
 export const networkOf = (status: boolean) => !forceOffline && status ? Network.Online : Network.Offline;
 
 export const network = ref<Network>(Network.Online)
-export const isOffline = computed(() => network?.value === Network.Offline );
+export const isOffline = computed(() => network?.value === Network.Offline);
+export const isOfflineOrNull = computed(() => isOffline ? true : null);
 export const isOnline = computed(() => network?.value === Network.Online);
-
+export const isOnlineOrNull = computed(() => isOnline ? true : null);
