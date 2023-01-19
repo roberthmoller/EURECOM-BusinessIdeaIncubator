@@ -5,7 +5,7 @@ import {addDoc} from "firebase/firestore";
 import {ideasRef} from "@/firebase";
 import {NewIdea} from "@/models/idea";
 import {useCurrentUser} from "vuefire";
-
+import {isOffline} from "@/models/network";
 
 const user = useCurrentUser()
 const storage = getStorage();
@@ -16,11 +16,12 @@ const attachments = ref([]);
 const isFormValid = computed(() => {
   return title.value.length > 0 && description.value.length > 0;
 });
+
 const onFilesChanged = async (event) => {
   attachments.value = event.target.files;
 }
-
 const createIdea = async () => {
+  touched.value = true;
   if (!title.value || !description.value) {
     return;
   }
@@ -30,6 +31,7 @@ const createIdea = async () => {
     const attachment = attachments.value[i];
     attachmentNames.push(attachment.name);
   }
+
 
   const reference = await addDoc(ideasRef, new NewIdea(title.value, description.value, user.value.uid, attachmentNames));
   if (attachmentNames.length > 0) {
@@ -63,18 +65,31 @@ const createIdea = async () => {
       <h1>Share Idea 💡</h1>
       <p>Contribute to the discussion and share your idea</p>
     </hgroup>
-    <!-- todo: validate form and wait for upload-->
     <form @submit.prevent>
       <label for="title">Title*</label>
-      <input type="text" id="title" v-model="title" required>
-      <label for="description"><span data-tooltip="Markdown syntax">Description*</span></label>
-      <textarea id="description" v-model="description" required></textarea>
+      <input id="title" v-model="title"
+             :readonly="isOffline"
+             :placeholder="isOffline
+                ? 'You are offline. Please connect to the internet to share your idea.'
+                : 'The name or essence of your idea'"
+             required type="text">
+      <label for="description"><span data-tooltip="You can use markdown here">Description*</span></label>
+      <textarea id="description" v-model="description"
+                :readonly="isOffline"
+                :placeholder="isOffline
+                  ? 'You are offline. Please connect to the internet to share your idea.'
+                  : 'Express yourself in more detail'"
+                required>
+      </textarea>
       <label for="files">Files</label>
       <input id="files" accept="image/jpeg, image/png" multiple
              ref="attachments"
+             :disabled="isOffline"
              type="file" @change="onFilesChanged">
 
-      <button type="submit" @click="createIdea" :disabled="!isFormValid">Share</button>
+      <button type="submit" @click="createIdea" :disabled="!isFormValid || isOffline">
+        Share
+      </button>
     </form>
   </section>
 

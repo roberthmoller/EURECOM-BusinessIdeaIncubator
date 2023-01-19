@@ -7,6 +7,8 @@ import {useCurrentUser} from "vuefire";
 import {getStorage, ref as bucket, uploadBytes} from "firebase/storage";
 import {doc, setDoc} from "firebase/firestore";
 import {NewProfile} from "@/models/profile";
+import {isOffline, isOnline} from "@/models/network";
+import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 
 const router = useRouter();
 const storage = getStorage();
@@ -81,7 +83,7 @@ const onPhotoChange = async (event) => {
 
 <template>
   <main class="container">
-    <section id="authenticate" v-if="!user" class="grid">
+    <section id="authenticate" v-if="!user && isOnline" class="grid">
       <article>
         <form @submit.prevent>
           <h1>Login</h1>
@@ -106,6 +108,17 @@ const onPhotoChange = async (event) => {
           <input type="password" id="password" v-model="registerFormPassword" required>
           <button @click="register" :disabled="!isRegisterFormValid">Register</button>
         </form>
+      </article>
+
+    </section>
+    <section v-else-if="isOffline" id="offline">
+
+      <article style="display: flex; justify-content: center; align-items: center">
+        <FontAwesomeIcon icon="fa-solid fa-chain-slash" size="3x"/>
+       <hgroup>
+         <h1>Offline</h1>
+         <p>Please connect to the internet to authenticate</p>
+       </hgroup>
 
       </article>
 
@@ -123,7 +136,22 @@ const onPhotoChange = async (event) => {
 
 
 <style scoped>
+#offline {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
+#offline article {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+}
+#offline article hgroup,
+#offline article hgroup * {
+  margin: 0;
+}
 
 @media (min-width: 1024px) {
   #authenticate {

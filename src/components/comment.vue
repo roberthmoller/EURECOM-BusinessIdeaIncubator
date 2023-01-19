@@ -15,8 +15,6 @@ const props = defineProps({
     required: true
   }
 });
-// todo: can we get display name from userid; no we need a collection for it
-// todo: attachments
 const resource = (attachment) => {
   return `ideas/${props.idea.id}/comments/${props.comment.id}/${attachment}`;
 }

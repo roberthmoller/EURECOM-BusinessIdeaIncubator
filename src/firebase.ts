@@ -3,7 +3,7 @@ import {getAnalytics} from "firebase/analytics";
 import {getPerformance} from "firebase/performance";
 import {getStorage} from "firebase/storage";
 
-import {collection, getFirestore, limit, orderBy, query} from '@firebase/firestore'
+import {collection, enableMultiTabIndexedDbPersistence, getFirestore, limit, orderBy, query} from '@firebase/firestore'
 import {getAuth} from '@firebase/auth'
 import type {Idea} from "@/models/idea";
 import {ideaConverter} from "@/models/idea";
@@ -20,15 +20,19 @@ export const firebaseApp = initializeApp({
     measurementId: "G-6H655QHTJJ",
 })
 
-
-// used for the firestore refs
 export const db = getFirestore(firebaseApp)
 export const auth = getAuth(firebaseApp)
 export const analytics = getAnalytics(firebaseApp);
 export const perf = getPerformance(firebaseApp);
 export const storage = getStorage(firebaseApp);
-// const functions = getFunctions(firebaseApp);
-// here we can export reusable database references
+
+
+enableMultiTabIndexedDbPersistence(db)
+    .catch((err) => {
+        console.log('persistance', err)
+    })
+
+
 export let profilesRef = collection(db, 'profiles').withConverter<Profile>(profileConverter);
 export let ideasRef = collection(db, 'ideas').withConverter<Idea>(ideaConverter);
 export const top10VotedIdeasRef = query(ideasRef,

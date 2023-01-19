@@ -23,8 +23,11 @@
     "firebase": "^9.15.0",
     "marked": "^4.2.12",
     "moment": "^2.29.4",
+    "ping.js": "^0.3.0",
+    "v-offline": "^3.3.0",
     "vee-validate": "^4.7.3",
     "vue": "^3.2.45",
+    "vue-offline": "^2.0.8",
     "vue-router": "^4.1.6",
     "vuefire": "^3.0.1"
   },

@@ -7,6 +7,7 @@ import {doc, setDoc} from 'firebase/firestore'
 import {NewVote, voteConverter} from "@/models/vote";
 import {ideasRef} from "@/firebase";
 import ProfileName from "@/components/profile-name.vue";
+import {isOffline, isOnline} from "@/models/network";
 
 
 const props = defineProps({
@@ -44,7 +45,7 @@ const goToIdea = () => {
 <template>
   <article :key="idea.id" @click="goToIdea">
     <hgroup>
-        <h2>{{ idea.title }} {{0 <= props.index < podium.length ? podium[props.index] : "" }}</h2>
+      <h2>{{ idea.title }} {{ 0 <= props.index < podium.length ? podium[props.index] : "" }}</h2>
       <div class="context">
         <p>
           <a :href="'/profile/' + idea.author">
@@ -54,13 +55,22 @@ const goToIdea = () => {
 
         <div class="actions">
           <span :class="user && vote?.upvote ? 'secondary' :'primary'"
-             :data-tooltip="vote?.upvote ? 'remove vote': 'upvote'"
-             href="#" :role="isAuthenticated ?'button':''"
-             @click.stop="upvoteIdea(vote)">
+                :data-tooltip="isOnline
+                  ? vote?.upvote ? 'remove vote': 'upvote'
+                  : 'connect to upvote'"
+                href="#" :role="isAuthenticated ?'button':''"
+                :disabled="isOffline"
+                @click.stop="upvoteIdea(vote)">
             <span>{{ idea.voteCount }}</span>
             <span>👍</span>
           </span>
-          <a href="#" role="button" data-tooltip="comment" @click="goToIdea">{{ idea.commentCount }} 💬</a>
+          <a href="#" role="button"
+             data-tooltip="comment"
+             :disabled="isOffline"
+             @click="goToIdea">
+            <span>{{ idea.commentCount }}</span>
+            <span>💬</span>
+          </a>
         </div>
       </div>
 

@@ -5,6 +5,7 @@ import {ref} from "vue";
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 import ProfileName from "@/components/profile-name.vue";
 import ProfilePhoto from "@/components/profile-photo.vue";
+import {isOffline, isOnline} from "@/models/network";
 
 const user = useCurrentUser()
 const router = useRouter()
@@ -23,6 +24,8 @@ const routes = [
   {name: "Top Voted", path: "/top-voted"},
   {name: "Most Discussed", path: "/most-discussed"},
 ]
+
+const online = ref(true);
 </script>
 
 <template>
@@ -49,20 +52,14 @@ const routes = [
         <router-link :to="route.path" class="secondary">{{ route.name }}</router-link>
       </li>
     </ul>
-
-    <!--    <ul id="brand">-->
-    <!--      <li id="brand">-->
-    <!--        <router-link to="/">-->
-    <!--          <strong>Business Idea Incubator</strong>-->
-    <!--        </router-link>-->
-    <!--      </li>-->
-    <!--    </ul>-->
-
     <ul id="user">
+      <li v-if="isOffline" class="status" data-tooltip="offline" data-placement="bottom">
+        <FontAwesomeIcon icon="fa-solid fa-link-slash"/>
+      </li>
       <li v-if="user">
         <details role="list" dir="rtl">
           <summary aria-haspopup="listbox" role="link">
-            <ProfileName :uid="user.uid"/>
+            <ProfileName :uid="user.uid" class="name"/>
             <ProfilePhoto :uid="user.uid" :name="user.displayName" class="photo"/>
           </summary>
           <ul role="listbox">
@@ -71,7 +68,7 @@ const routes = [
           </ul>
         </details>
       </li>
-      <li v-else>
+      <li v-else-if="isOnline">
         <router-link class="secondary" to="/authenticate">Login</router-link>
       </li>
     </ul>
@@ -80,6 +77,12 @@ const routes = [
 
 
 <style scoped>
+.status {
+  border-bottom: none;
+  color: darkred;
+  margin: 0;
+}
+
 summary {
   display: flex;
   gap: .5rem;
@@ -98,6 +101,7 @@ summary .photo {
 
 summary p.photo {
   margin: 0;
+  padding: 1rem 1rem;
   text-align: center;
   background: var(--card-sectionning-background-color);
   display: flex;
@@ -125,6 +129,10 @@ summary p.photo {
 
 @media (max-width: 1024px) {
   .links > li:not(.collapsed):not(#brand) {
+    display: none;
+  }
+
+  #user summary .name {
     display: none;
   }
 }

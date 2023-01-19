@@ -1,5 +1,6 @@
 <script setup>
 import FirebaseImageCard from "@/components/firebase-image-card.vue";
+import ProfileName from "@/components/profile-name.vue";
 import AddComment from "@/components/add-comment.vue";
 import Comment from "@/components/comment.vue";
 import {useRouter} from "vue-router";
@@ -8,7 +9,7 @@ import {useCollection, useCurrentUser, useDocument} from "vuefire";
 import {collection, doc, limit, orderBy, query, setDoc} from 'firebase/firestore'
 import {commentConverter} from "@/models/comment";
 import {NewVote, voteConverter} from "@/models/vote";
-import ProfileName from "@/components/profile-name.vue";
+import {isOffline, isOnline} from "@/models/network";
 
 const router = useRouter();
 const user = useCurrentUser();
@@ -27,8 +28,6 @@ const commentsRef = query(
 const idea = useDocument(ideaRef);
 const vote = useDocument(voteRef);
 const comments = useCollection(commentsRef);
-
-
 const editIdea = () => {
   // router.push(`/ideas/${ideaId}/edit`);
   console.log("editIdea");
@@ -56,10 +55,22 @@ const deleteIdea = () => {
               <ProfileName :uid="idea.author"/>
             </a>
             <div id="actions">
-              <a href="#" role="button" v-if="vote" :data-tooltip="vote.upvote ? 'remove vote': 'upvote'" @click="upvoteIdea(!vote.upvote)" :class="vote.upvote ? 'secondary' :'primary'">👍</a>
+              <a
+                  :class="vote?.upvote ? 'secondary' :'primary'"
+                  :data-tooltip="vote?.upvote ? 'remove vote': 'upvote'"
+                  href="#"
+                  role="button"
+                  :disabled="isOffline"
+                  @click="upvoteIdea(!vote?.upvote ?? true)">👍</a>
               <!-- Todo: Enable editing -->
-              <a v-if="idea.author === user?.uid" data-tooltip="edit" href="#" role="button" @click="editIdea">📝</a>
-              <a v-if="idea.author === user?.uid" data-tooltip="delete" href="#" role="button" @click="deleteIdea">❌</a>
+              <a v-if="idea.author === user?.uid"
+                 data-tooltip="edit" href="#" role="button"
+                 :disabled="true"
+                 @click="editIdea">📝</a>
+              <a v-if="idea.author === user?.uid"
+                 data-tooltip="delete" href="#" role="button"
+                 :disabled="isOffline"
+                 @click="deleteIdea">🗑️</a>
             </div>
           </div>
         </hgroup>
@@ -69,16 +80,19 @@ const deleteIdea = () => {
       </main>
 
       <footer id="attachments" v-if="idea.attachments.length > 0">
-        <h5>Attachments</h5>
-        <Suspense>
-          <section id="attachment-list">
-            <FirebaseImageCard v-for="attachment in idea.attachments" :attachment="attachment" :ideaId="ideaId"/>
-          </section>
+        <hgroup>
+          <h5>Attachments</h5>
+          <Suspense v-if="isOnline">
+            <section id="attachment-list">
+              <FirebaseImageCard v-for="attachment in idea.attachments" :attachment="attachment" :ideaId="ideaId"/>
+            </section>
 
-          <template #fallback>
-            <p aria-busy="true">Loading...</p>
-          </template>
-        </Suspense>
+            <template #fallback>
+              <p aria-busy="true">Loading...</p>
+            </template>
+          </Suspense>
+          <p v-else>Not available offline..</p>
+        </hgroup>
       </footer>
     </article>
     <hr>
@@ -116,6 +130,7 @@ const deleteIdea = () => {
 #attachments section {
   margin-bottom: 0;
 }
+
 #title #context p {
   margin: 0;
 }
@@ -146,5 +161,6 @@ header hgroup {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
+  margin-top: 1rem;
 }
 </style>

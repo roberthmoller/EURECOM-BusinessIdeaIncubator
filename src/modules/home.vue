@@ -3,7 +3,6 @@ import {useCurrentUser} from "vuefire";
 import TopVotedSection from "@/components/top-voted-section.vue";
 import MostDiscussedSection from "@/components/most-discussed-section.vue";
 import ShareIdea from "@/components/share-idea.vue";
-import TopContrbuters from "@/components/top-contrbuters.vue";
 
 const user = useCurrentUser()
 

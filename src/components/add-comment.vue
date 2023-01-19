@@ -5,7 +5,7 @@ import {addDoc, collection} from 'firebase/firestore'
 import {ideasRef} from "@/firebase";
 import {getStorage, ref as file, uploadBytes} from "firebase/storage";
 import {commentConverter, NewComment} from "@/models/comment";
-import {router} from "@/routes";
+import {isOffline, isOnline} from "@/models/network";
 
 const props = defineProps({
   ideaId: {
@@ -66,7 +66,6 @@ const addComment = async () => {
     comment.value = "";
     attachments.value = [];
     isUploading.value = false;
-    await router.push(router.currentRoute.value)
   }
 };
 </script>
@@ -75,11 +74,15 @@ const addComment = async () => {
   <section id="new-comment">
     <h5>Add a <span data-tooltip="Markdown syntax">comment</span></h5>
     <form @submit.prevent>
-      <textarea v-model="comment" placeholder="What do you think?*" required></textarea>
-      <input id="new-comment-attachments" :ref="attachments" multiple accept="image/jpeg, image/png" type="file" v-on:change="onFilesChanged"/>
+      <textarea v-model="comment"
+                :placeholder="isOnline ? 'What do you think?*': 'You need to be connected to the internet to comment'"
+                required :readonly="isOffline"></textarea>
+      <input id="new-comment-attachments" :ref="attachments" multiple
+             accept="image/jpeg, image/png" type="file"
+             :disabled="isOffline"
+             v-on:change="onFilesChanged"/>
       <!-- todo: warn user from navigating away -->
-      <button type="submit" @click="addComment" v-if="!isUploading" :disabled="!isFormValid" class="">Add comment</button>
-      <button type="submit" disabled v-else aria-busy="true" class="secondary">Uploading</button>
+      <button type="submit" @click="addComment" :disabled="!isFormValid" class="">Add comment</button>
     </form>
   </section>
 

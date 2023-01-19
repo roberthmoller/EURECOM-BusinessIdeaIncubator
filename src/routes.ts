@@ -2,11 +2,11 @@ import {createRouter, createWebHistory} from 'vue-router';
 import {getCurrentUser} from "vuefire";
 import Authenticate from "@/modules/authenticate.vue";
 import Home from "@/modules/home.vue";
-import Idea from "@/modules/idea.vue";
 import AllIdeas from "@/modules/all-ideas.vue";
 import TopVoted from "@/modules/top-voted.vue";
 import MostDiscussed from "@/modules/most-discussed.vue";
 import Profile from "@/modules/profile.vue";
+import Idea from "@/modules/idea.vue";
 
 export const router = createRouter({
     history: createWebHistory(),
