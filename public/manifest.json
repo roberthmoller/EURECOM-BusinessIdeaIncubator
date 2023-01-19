@@ -1,4 +1,13 @@
 {
+  "name": "Business Idea Incubator",
+  "short_name": "BII",
+  "orientation": "portrait",
+  "display": "standalone",
+  "id": "/",
+  "description": "Share your ideas and get feedback from the community",
+  "start_url": "/index.html",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
   "icons": [
     {
       "src": "icon_512x512.png",
@@ -40,13 +49,5 @@
       "sizes": "72x72",
       "type": "image/png"
     }
-  ],
-  "name": "WeatherApp",
-  "short_name": "WeatherApp",
-  "orientation": "portrait",
-  "display": "standalone",
-  "start_url": ".",
-  "description": "Find out the current weather forecast in any city around the world.",
-  "theme_color": "#ffffff",
-  "background_color": "#76afeb"
+  ]
 }
