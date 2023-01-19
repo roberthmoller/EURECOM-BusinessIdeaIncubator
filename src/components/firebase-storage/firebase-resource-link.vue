@@ -1,5 +1,4 @@
 <script setup>
-import {defineProps} from "vue";
 import FirebaseResourceLinkContent from "@/components/firebase-storage/firebase-resource-link-content.vue";
 
 const props = defineProps({

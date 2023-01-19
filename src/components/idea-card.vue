@@ -1,6 +1,6 @@
 <script setup>
 import {SavedIdea} from "@/models/idea";
-import {computed, defineProps} from "vue";
+import {computed} from "vue";
 import {useRouter} from "vue-router";
 import {useCurrentUser, useDocument} from "vuefire";
 import {doc, setDoc} from 'firebase/firestore'

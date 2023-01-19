@@ -1,5 +1,4 @@
 <script setup>
-import {defineProps} from "vue";
 import FirebaseImageLink from "@/components/firebase-storage/firebase-resource-link.vue";
 import {SavedComment} from "@/models/comment";
 import {SavedIdea} from "@/models/idea";

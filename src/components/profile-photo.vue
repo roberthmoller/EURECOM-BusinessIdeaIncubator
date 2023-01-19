@@ -1,6 +1,6 @@
 <script setup>
 import {getDownloadURL, getStorage, ref as file} from 'firebase/storage'
-import {defineProps, ref} from "vue";
+import {ref} from "vue";
 
 const props = defineProps({
   uid: {

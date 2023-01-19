@@ -1,5 +1,4 @@
 <script setup>
-import {defineProps} from "vue";
 import {profilesRef} from "@/firebase";
 import {useDocument} from "vuefire";
 import {doc} from 'firebase/firestore'

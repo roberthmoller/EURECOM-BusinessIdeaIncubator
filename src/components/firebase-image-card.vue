@@ -1,6 +1,5 @@
 <script setup>
 import {getDownloadURL, getMetadata, getStorage, ref as file} from "firebase/storage";
-import {defineProps} from "vue";
 
 const props = defineProps({
   ideaId: {
