@@ -1,7 +1,11 @@
-@import './base.css';
+
+html {
+    background: var(--background-color);
+}
 
 body {
     margin: 0;
     padding: 0;
     overflow-x: hidden;
+    background: var(--background-color);
 }

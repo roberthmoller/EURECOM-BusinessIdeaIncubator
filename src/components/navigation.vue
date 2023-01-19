@@ -37,7 +37,7 @@ const online = ref(true);
             <FontAwesomeIcon icon="fa-solid fa-bars"/>
           </summary>
           <ul role="listbox">
-            <li v-for="route in routes">
+            <li v-for="route in routes" :key="route.path">
               <router-link :to="route.path" class="secondary">{{ route.name }}</router-link>
             </li>
           </ul>
@@ -48,7 +48,7 @@ const online = ref(true);
           <strong>Business Idea Incubator</strong>
         </router-link>
       </li>
-      <li v-for="route in routes">
+      <li v-for="route in routes" :key="route.path">
         <router-link :to="route.path" class="secondary">{{ route.name }}</router-link>
       </li>
     </ul>
@@ -63,7 +63,7 @@ const online = ref(true);
             <ProfilePhoto :uid="user.uid" :name="user.displayName" class="photo"/>
           </summary>
           <ul role="listbox">
-            <li><a :href="'/profile/' + user.uid">Profile</a></li>
+            <li><router-link :to="'/profile/' + user.uid">Profile</router-link></li>
             <li><a @click="logout">Logout</a></li>
           </ul>
         </details>

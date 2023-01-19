@@ -36,7 +36,7 @@ const ideasByUser = useCollection(ideasByUserRef);
         <h3>Ideas</h3>
         <p>by {{ user.name }}</p>
       </hgroup>
-      <IdeaCard v-for="idea in ideasByUser" :idea="idea"/>
+      <IdeaCard v-for="idea in ideasByUser" :idea="idea" :key="idea.id"/>
     </main>
   </section>
 </template>

@@ -14,7 +14,7 @@ const topVotedIdeas = useCollection(top10VotedIdeasRef);
         See all what others are voting for
       </router-link>
     </hgroup>
-    <IdeaCard v-for="(idea, index) in topVotedIdeas" :idea="idea" :index="index"/>
+    <IdeaCard v-for="(idea, index) in topVotedIdeas" :idea="idea" :index="index" :key="idea.id"/>
   </section>
 </template>
 

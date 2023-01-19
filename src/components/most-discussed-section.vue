@@ -15,7 +15,7 @@ const mostDiscussedIdeas = useCollection(tenMostDiscussedIdeasRef);
         See all the hottest discussions right now
       </router-link>
     </hgroup>
-    <IdeaCard v-for="(idea, index) in mostDiscussedIdeas" :idea="idea" :index="index"/>
+    <IdeaCard v-for="(idea, index) in mostDiscussedIdeas" :idea="idea" :index="index" :key="idea.id"/>
   </section>
 </template>
 

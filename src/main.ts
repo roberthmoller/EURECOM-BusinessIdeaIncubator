@@ -1,7 +1,7 @@
 import {createApp} from 'vue'
 import {VueFire, VueFireAuth} from 'vuefire'
-import {firebaseApp} from './firebase'
-import {router} from "./routes"
+import {firebaseApp} from '@/firebase'
+import {router} from "@/routes"
 import {md} from "@/directives/md";
 import {date} from "@/directives/date";
 import App from './app.vue'

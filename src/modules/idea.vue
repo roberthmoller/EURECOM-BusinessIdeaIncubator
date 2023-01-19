@@ -84,7 +84,7 @@ const deleteIdea = () => {
           <h5>Attachments</h5>
           <Suspense v-if="isOnline">
             <section id="attachment-list">
-              <FirebaseImageCard v-for="attachment in idea.attachments" :attachment="attachment" :ideaId="ideaId"/>
+              <FirebaseImageCard v-for="attachment in idea.attachments" :attachment="attachment" :ideaId="ideaId" :key="idea.id"/>
             </section>
 
             <template #fallback>
@@ -100,7 +100,7 @@ const deleteIdea = () => {
       <AddComment v-if="user" :idea-id="ideaId"/>
       <h5>Comments</h5>
       <section id="existing-comments">
-        <Comment v-for="comment in comments" :idea="idea" :comment="comment"/>
+        <Comment v-for="comment in comments" :idea="idea" :comment="comment" :key="idea.id"/>
       </section>
 
     </section>

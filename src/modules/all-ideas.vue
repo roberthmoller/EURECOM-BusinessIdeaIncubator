@@ -11,7 +11,7 @@ const ideas = useCollection(ideasRef);
   <section class="container">
     <h1>All Ideas</h1>
     <main>
-      <IdeaCard v-for="idea in ideas" :idea="idea"/>
+      <IdeaCard v-for="idea in ideas" :idea="idea" :key="idea.id"/>
     </main>
   </section>
 </template>

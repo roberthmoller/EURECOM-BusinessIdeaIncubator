@@ -11,7 +11,7 @@ const ideas = useCollection(top10VotedIdeasRef);
   <section class="container">
     <h1>Top Voted</h1>
     <main>
-      <IdeaCard v-for="idea in ideas" :idea="idea"/>
+      <IdeaCard v-for="idea in ideas" :idea="idea" :key="idea.id"/>
     </main>
   </section>
 </template>

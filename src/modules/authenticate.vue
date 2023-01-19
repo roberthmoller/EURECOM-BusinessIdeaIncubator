@@ -49,13 +49,15 @@ const register = async () => {
     isUploading.value = true;
     await new Promise(resolve => {
       const reader = new FileReader();
+      console.log('starting read');
       reader.readAsArrayBuffer(attachment);
       reader.onload = async (event) => {
+        console.log('finished read');
         const filename = 'profiles/' + credential.user.uid;
         const fileRe = bucket(storage, filename);
-        console.log("started upload")
+        console.log('starting upload');
         await uploadBytes(fileRe, event.target.result, {contentType: attachment.type, customMetadata: {owner: credential.user.uid}});
-        console.log("finished")
+        console.log('finished upload');
         resolve();
       }
     });
@@ -115,10 +117,10 @@ const onPhotoChange = async (event) => {
 
       <article style="display: flex; justify-content: center; align-items: center">
         <FontAwesomeIcon icon="fa-solid fa-chain-slash" size="3x"/>
-       <hgroup>
-         <h1>Offline</h1>
-         <p>Please connect to the internet to authenticate</p>
-       </hgroup>
+        <hgroup>
+          <h1>Offline</h1>
+          <p>Please connect to the internet to authenticate</p>
+        </hgroup>
 
       </article>
 
@@ -148,6 +150,7 @@ const onPhotoChange = async (event) => {
   align-items: center;
   gap: 2rem;
 }
+
 #offline article hgroup,
 #offline article hgroup * {
   margin: 0;

@@ -21,7 +21,6 @@ const onFilesChanged = async (event) => {
   attachments.value = event.target.files;
 }
 const createIdea = async () => {
-  touched.value = true;
   if (!title.value || !description.value) {
     return;
   }
