@@ -35,10 +35,19 @@ enableMultiTabIndexedDbPersistence(db)
 
 export const profilesRef = collection(db, 'profiles').withConverter<Profile>(profileConverter);
 export const ideasRef = collection(db, 'ideas').withConverter<Idea>(ideaConverter);
+
+export const topVotedIdeasRef = query(ideasRef,
+    orderBy('voteCount', 'desc'),
+    orderBy('createdAt', 'desc'));
 export const top10VotedIdeasRef = query(ideasRef,
     orderBy('voteCount', 'desc'),
     orderBy('createdAt', 'desc'),
     limit(10));
+
+export const mostDiscussedIdeasRef = query(ideasRef,
+    orderBy('commentCount', 'desc'),
+    orderBy('createdAt', 'desc'));
+
 export const tenMostDiscussedIdeasRef = query(ideasRef,
     orderBy('commentCount', 'desc'),
     orderBy('createdAt', 'desc'),

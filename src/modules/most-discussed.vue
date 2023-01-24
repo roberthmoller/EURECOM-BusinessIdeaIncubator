@@ -1,9 +1,9 @@
 <script setup>
-import {tenMostDiscussedIdeasRef} from "@/firebase";
+import {mostDiscussedIdeasRef} from "@/firebase";
 import {useCollection} from "vuefire";
 import IdeaCard from "@/components/idea-card.vue";
 
-const ideas = useCollection(tenMostDiscussedIdeasRef);
+const ideas = useCollection(mostDiscussedIdeasRef);
 
 </script>
 
