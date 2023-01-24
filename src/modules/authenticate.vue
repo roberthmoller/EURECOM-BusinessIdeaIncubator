@@ -24,6 +24,7 @@ const registerFormName = ref("");
 const registerFormEmail = ref("");
 const registerFormPassword = ref("");
 const errorMessage = ref("");
+const errorAlreadyExists = ref("");
 const isRegisterFormValid = computed(() => {
   return (
     registerFormName.value.length > 0 &&
@@ -53,13 +54,24 @@ const login = async () => {
 
 const register = async () => {
   if (!isRegisterFormValid.value) {
+    errorAlreadyExists.value = "";
     return;
   }
-  const credential = await createUserWithEmailAndPassword(
-    auth,
-    registerFormEmail.value,
-    registerFormPassword.value
-  );
+  try {
+    const credential = await createUserWithEmailAndPassword(
+      auth,
+      registerFormEmail.value,
+      registerFormPassword.value
+    );
+  } catch (error) {
+    if (error.code === "auth/email-already-in-use") {
+      errorAlreadyExists.value =
+        "This email address is already in use. Please use a different email address.";
+    } else {
+      errorAlreadyExists.value =
+        "An error occurred while creating your account. Please try again later.";
+    }
+  }
 
   const attachment = photo.value;
   if (attachment) {
@@ -143,6 +155,7 @@ const onPhotoChange = async (event) => {
             v-model="registerFormPassword"
             required
           />
+          <p class="error-message">{{ errorAlreadyExists }}</p>
           <button @click="register" :disabled="!isRegisterFormValid">
             Register
           </button>
