@@ -15,7 +15,6 @@ const user = useCurrentUser()
     </main>
     <aside v-if="user" class="container">
       <ShareIdea/>
-<!--      <TopContrbuters/>-->
     </aside>
   </div>
 </template>

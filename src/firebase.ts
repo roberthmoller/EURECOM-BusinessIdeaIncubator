@@ -39,16 +39,16 @@ export const ideasRef = collection(db, 'ideas').withConverter<Idea>(ideaConverte
 export const topVotedIdeasRef = query(ideasRef,
     orderBy('voteCount', 'desc'),
     orderBy('createdAt', 'desc'));
-export const top10VotedIdeasRef = query(ideasRef,
+export const top3VotedIdeasRef = query(ideasRef,
     orderBy('voteCount', 'desc'),
     orderBy('createdAt', 'desc'),
-    limit(10));
+    limit(3));
 
 export const mostDiscussedIdeasRef = query(ideasRef,
     orderBy('commentCount', 'desc'),
     orderBy('createdAt', 'desc'));
 
-export const tenMostDiscussedIdeasRef = query(ideasRef,
+export const threeMostDiscussedIdeasRef = query(ideasRef,
     orderBy('commentCount', 'desc'),
     orderBy('createdAt', 'desc'),
-    limit(10));
+    limit(3));
