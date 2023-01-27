@@ -105,22 +105,21 @@ const onProfilePageCheck = computed(() => onProfilePage);
               role="button"
               data-tooltip="comment"
               :disabled="isOffline ? true : null"
-              @click="goToIdea"
-          >
+              @click="goToIdea">
             <span>{{ idea.commentCount }}</span>
             <span>💬</span>
           </a>
 
-          <a
+          <span
               href="#"
               v-if="onProfilePageCheck"
-              @click="deleteIdea"
+              @click.stop="deleteIdea"
               role="button"
               class="delete"
               :disabled="isOffline ? true : null"
               data-tooltip="delete">
             <span>🗑️</span>
-          </a>
+          </span>
         </div>
       </div>
     </hgroup>

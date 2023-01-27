@@ -6,7 +6,7 @@ import Comment from "@/components/comment.vue";
 import {useRouter} from "vue-router";
 import {ideasRef} from "@/firebase";
 import {useCollection, useCurrentUser, useDocument} from "vuefire";
-import {collection, doc, limit, orderBy, query, setDoc} from 'firebase/firestore'
+import {collection, deleteDoc, doc, limit, orderBy, query, setDoc} from 'firebase/firestore'
 import {commentConverter} from "@/models/comment";
 import {NewVote, voteConverter} from "@/models/vote";
 import {isOffline, isOnline} from "@/models/network";
@@ -39,9 +39,11 @@ const upvoteIdea = async upvote => {
   await setDoc(voteRef, vote);
 }
 
-const deleteIdea = () => {
-  console.log("deleteIdea");
-}
+const deleteIdea = async () => {
+  if (window.confirm("Are you sure you want to delete this idea?")) {
+    await deleteDoc(ideasRef.doc(ideaId));
+  }
+};
 </script>
 
 <template>
@@ -70,7 +72,7 @@ const deleteIdea = () => {
               <!-- Todo: Enable delete-->
               <a v-if="idea.author === user?.uid"
                  data-tooltip="delete" href="#" role="button"
-                 :disabled="isOffline ? true : null"
+                 :disabled="isOffline ? true : null" class="delete"
                  @click="deleteIdea">🗑️</a>
             </div>
           </div>
@@ -118,6 +120,10 @@ const deleteIdea = () => {
 
 
 <style scoped>
+.delete {
+  background-color: red;
+  border-color: darkred;
+}
 
 #title #context {
   display: flex;
