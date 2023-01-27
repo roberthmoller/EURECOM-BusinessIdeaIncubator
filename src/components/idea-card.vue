@@ -1,13 +1,13 @@
 <script setup>
-import { SavedIdea } from "@/models/idea";
-import { computed } from "vue";
-import { useRouter } from "vue-router";
-import { useCurrentUser, useDocument } from "vuefire";
-import { deleteDoc, doc, setDoc } from "firebase/firestore";
-import { NewVote, voteConverter } from "@/models/vote";
-import { ideasRef } from "@/firebase";
+import {SavedIdea} from "@/models/idea";
+import {computed} from "vue";
+import {useRouter} from "vue-router";
+import {useCurrentUser, useDocument} from "vuefire";
+import {deleteDoc, doc, setDoc} from "firebase/firestore";
+import {NewVote, voteConverter} from "@/models/vote";
+import {ideasRef} from "@/firebase";
 import ProfileName from "@/components/profile-name.vue";
-import { isOffline, isOnline } from "@/models/network";
+import {isOffline, isOnline} from "@/models/network";
 
 const props = defineProps({
   idea: {
@@ -24,10 +24,10 @@ const user = useCurrentUser();
 const isAuthenticated = computed(() => user.value !== null);
 
 const voteRef = user.value
-  ? doc(ideasRef, props.idea.id, "votes", user.value.uid).withConverter(
-      voteConverter
+    ? doc(ideasRef, props.idea.id, "votes", user.value.uid).withConverter(
+        voteConverter
     )
-  : null;
+    : null;
 const vote = user.value ? useDocument(voteRef) : null;
 
 const podium = ["🥇", "🥈", "🥉"];
@@ -76,44 +76,51 @@ const onProfilePageCheck = computed(() => onProfilePage);
       <div class="context">
         <p>
           <a :href="'/profile/' + idea.author">
-            <ProfileName :uid="idea.author" />
+            <ProfileName :uid="idea.author"/>
           </a>
         </p>
 
         <div class="actions">
           <span
-            v-if="isOnline"
-            :class="user && vote?.upvote ? 'secondary' : 'primary'"
-            :data-tooltip="
+              v-if="isOnline"
+              :class="user && vote?.upvote ? 'secondary' : 'primary'"
+              :data-tooltip="
               isOnline
                 ? vote?.upvote
                   ? 'remove vote'
                   : 'upvote'
                 : 'connect to upvote'
             "
-            href="#"
-            :role="isAuthenticated ? 'button' : ''"
-            :disabled="isOffline ? true : null"
-            @click.stop="upvoteIdea(vote)"
+              href="#"
+              :role="isAuthenticated ? 'button' : ''"
+              :disabled="isOffline ? true : null"
+              @click.stop="upvoteIdea(vote)"
           >
             <span>{{ idea.voteCount }}</span>
             <span>👍</span>
           </span>
 
           <a
-            href="#"
-            role="button"
-            data-tooltip="comment"
-            :disabled="isOffline ? true : null"
-            @click="goToIdea"
+              href="#"
+              role="button"
+              data-tooltip="comment"
+              :disabled="isOffline ? true : null"
+              @click="goToIdea"
           >
             <span>{{ idea.commentCount }}</span>
             <span>💬</span>
           </a>
 
-          <button v-if="onProfilePageCheck" @click="deleteIdea" class="delete">
+          <a
+              href="#"
+              v-if="onProfilePageCheck"
+              @click="deleteIdea"
+              role="button"
+              class="delete"
+              :disabled="isOffline ? true : null"
+              data-tooltip="delete">
             <span>🗑️</span>
-          </button>
+          </a>
         </div>
       </div>
     </hgroup>
@@ -127,7 +134,9 @@ article:hover {
 
 .delete {
   background-color: red;
+  border-color: darkred;
 }
+
 .actions > * {
   text-decoration: none;
   border-bottom: none !important;
