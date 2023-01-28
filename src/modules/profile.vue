@@ -58,8 +58,16 @@ header hgroup * {
   margin-left: .5rem;
   height: 128px;
   width: 128px;
+  aspect-ratio: 1/1;
+
   border-radius: 100px;
   object-fit: cover;
+}
+
+@media (max-width: 414px) {
+  header {
+    flex-direction: column;
+  }
 }
 
 p.photo {
