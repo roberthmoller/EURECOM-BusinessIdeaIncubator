@@ -1,19 +1,14 @@
 <script setup>
-import { useRouter } from "vue-router";
-import { computed, ref } from "vue";
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut,
-  updateProfile,
-} from "firebase/auth";
-import { auth, profilesRef } from "@/firebase";
-import { useCurrentUser } from "vuefire";
-import { getStorage, ref as bucket, uploadBytes } from "firebase/storage";
-import { doc, setDoc } from "firebase/firestore";
-import { NewProfile } from "@/models/profile";
-import { isOffline, isOnline } from "@/models/network";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import {useRouter} from "vue-router";
+import {computed, ref} from "vue";
+import {createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile,} from "firebase/auth";
+import {auth, profilesRef} from "@/firebase";
+import {useCurrentUser} from "vuefire";
+import {getStorage, ref as bucket, uploadBytes} from "firebase/storage";
+import {doc, setDoc} from "firebase/firestore";
+import {NewProfile} from "@/models/profile";
+import {isOffline, isOnline} from "@/models/network";
+import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 
 const router = useRouter();
 const storage = getStorage();
@@ -27,9 +22,9 @@ const errorMessage = ref("");
 const errorAlreadyExists = ref("");
 const isRegisterFormValid = computed(() => {
   return (
-    registerFormName.value.length > 0 &&
-    registerFormEmail.value.length > 0 &&
-    registerFormPassword.value.length > 0
+      registerFormName.value.length > 0 &&
+      registerFormEmail.value.length > 0 &&
+      registerFormPassword.value.length > 0
   );
 });
 
@@ -48,7 +43,7 @@ const login = async () => {
     await router.push("/");
   } catch (error) {
     errorMessage.value =
-      "Authentication failed. Please check you entered the correct username and/or password.";
+        "Authentication failed. Please check you entered the correct username and/or password.";
   }
 };
 
@@ -59,48 +54,52 @@ const register = async () => {
   }
   try {
     const credential = await createUserWithEmailAndPassword(
-      auth,
-      registerFormEmail.value,
-      registerFormPassword.value
+        auth,
+        registerFormEmail.value,
+        registerFormPassword.value
     );
+
+    await setDoc(
+        doc(profilesRef, credential.user.uid),
+        new NewProfile(registerFormName.value, registerFormEmail.value)
+    );
+    await updateProfile(credential.user, {displayName: registerFormName.value});
+
+    const attachment = photo.value;
+    if (attachment) {
+      isUploading.value = true;
+      await new Promise((resolve) => {
+        const reader = new FileReader();
+        console.log("starting read");
+        reader.readAsArrayBuffer(attachment);
+        reader.onload = async (event) => {
+          console.log("finished read");
+          const filename = "profiles/" + credential.user.uid;
+          const fileRe = bucket(storage, filename);
+          console.log("starting upload");
+          await uploadBytes(fileRe, event.target.result, {
+            contentType: attachment.type,
+            customMetadata: {owner: credential.user.uid},
+          });
+          console.log("finished upload");
+          resolve();
+        };
+      });
+      isUploading.value = false;
+    }
+
+    await router.push("/");
   } catch (error) {
     if (error.code === "auth/email-already-in-use") {
       errorAlreadyExists.value =
-        "This email address is already in use. Please use a different email address.";
+          "This email address is already in use. Please use a different email address.";
     } else {
       errorAlreadyExists.value =
-        "An error occurred while creating your account. Please try again later.";
+          "An error occurred while creating your account. Please try again later.";
     }
   }
 
-  const attachment = photo.value;
-  if (attachment) {
-    isUploading.value = true;
-    await new Promise((resolve) => {
-      const reader = new FileReader();
-      console.log("starting read");
-      reader.readAsArrayBuffer(attachment);
-      reader.onload = async (event) => {
-        console.log("finished read");
-        const filename = "profiles/" + credential.user.uid;
-        const fileRe = bucket(storage, filename);
-        console.log("starting upload");
-        await uploadBytes(fileRe, event.target.result, {
-          contentType: attachment.type,
-          customMetadata: { owner: credential.user.uid },
-        });
-        console.log("finished upload");
-        resolve();
-      };
-    });
-    isUploading.value = false;
-  }
-  await setDoc(
-    doc(profilesRef, credential.user.uid),
-    new NewProfile(registerFormName.value, registerFormEmail.value)
-  );
-  await updateProfile(credential.user, { displayName: registerFormName.value });
-  await router.push("/");
+
 };
 
 const logout = async () => {
@@ -124,9 +123,9 @@ const onPhotoChange = async (event) => {
         <form @submit.prevent>
           <h1>Login</h1>
           <label for="email">Email*</label>
-          <input type="email" id="email" v-model="email" required />
+          <input type="email" id="email" v-model="email" required/>
           <label for="password">Password*</label>
-          <input type="password" id="password" v-model="password" required />
+          <input type="password" id="password" v-model="password" required/>
           <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
           <button type="submit" @click="login" :disabled="!isLoginFormValid">
             Login
@@ -139,21 +138,21 @@ const onPhotoChange = async (event) => {
           <h1>Register</h1>
           <label for="photo">Photo</label>
           <input
-            type="file"
-            id="photo"
-            accept="image/*"
-            @change="onPhotoChange"
+              type="file"
+              id="photo"
+              accept="image/*"
+              @change="onPhotoChange"
           />
           <label for="name">Name*</label>
-          <input type="name" id="name" v-model="registerFormName" required />
+          <input type="name" id="name" v-model="registerFormName" required/>
           <label for="email">Email*</label>
-          <input type="email" id="email" v-model="registerFormEmail" required />
+          <input type="email" id="email" v-model="registerFormEmail" required/>
           <label for="password">Password*</label>
           <input
-            type="password"
-            id="password"
-            v-model="registerFormPassword"
-            required
+              type="password"
+              id="password"
+              v-model="registerFormPassword"
+              required
           />
           <p class="error-message">{{ errorAlreadyExists }}</p>
           <button @click="register" :disabled="!isRegisterFormValid">
@@ -164,9 +163,9 @@ const onPhotoChange = async (event) => {
     </section>
     <section v-else-if="isOffline" id="offline">
       <article
-        style="display: flex; justify-content: center; align-items: center"
+          style="display: flex; justify-content: center; align-items: center"
       >
-        <FontAwesomeIcon icon="fa-solid fa-chain-slash" size="3x" />
+        <FontAwesomeIcon icon="fa-solid fa-chain-slash" size="3x"/>
         <hgroup>
           <h1>Offline</h1>
           <p>Please connect to the internet to authenticate</p>
@@ -188,6 +187,7 @@ const onPhotoChange = async (event) => {
 .error-message {
   color: red;
 }
+
 #offline {
   display: flex;
   justify-content: center;
