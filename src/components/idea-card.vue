@@ -75,9 +75,9 @@ const onProfilePageCheck = computed(() => onProfilePage);
       </h2>
       <div class="context">
         <p>
-          <a :href="'/profile/' + idea.author">
+          <router-link :to="'/profile/' + idea.author">
             <ProfileName :uid="idea.author"/>
-          </a>
+          </router-link>
         </p>
 
         <div class="actions">

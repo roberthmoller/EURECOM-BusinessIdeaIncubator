@@ -25,9 +25,9 @@ const resource = (attachment) => {
     <footer>
       <sub v-date>{{ comment.createdAt }}</sub>
       <br/>
-      <a :href="'/profile/' + comment.author">
+      <router-link :to="'/profile/' + comment.author">
         <ProfileName :uid="comment.author"/>
-      </a>
+      </router-link>
       <br/>
       <div class="comment-attachments" v-if="comment.attachments.length > 0">
         <FirebaseImageLink v-for="attachment in comment.attachments" :key="attachment"
