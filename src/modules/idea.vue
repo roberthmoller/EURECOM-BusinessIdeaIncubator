@@ -53,9 +53,9 @@ const deleteIdea = async () => {
         <hgroup id="title">
           <h1>{{ idea.title }}</h1>
           <div id="context">
-            <a :href="'/profile/' + idea.author">
+            <router-link :to="'/profile/' + idea.author">
               <ProfileName :uid="idea.author"/>
-            </a>
+            </router-link>
             <div id="actions">
               <a
                   :class="vote?.upvote ? 'secondary' :'primary'"
